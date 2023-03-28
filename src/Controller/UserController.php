@@ -31,6 +31,8 @@ class UserController extends AbstractController
         foreach ($users as $user) {
             $data[] = [
                 'id' => $user->getId(),
+                'firstName' => $user->getFirstname(),
+                'lastName' => $user->getLastname(),
             ];
         }
 
