@@ -1,43 +1,56 @@
 <?php
 
 namespace App\Controller;
-
 use App\Entity\Parcours;
-use App\Form\ParcoursType;
-use App\Repository\ParcoursRepository;
+use App\Entity\Soignant;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * @Route("/api", name="api_")
+ */
+
 #[Route('/parcours')]
 class ParcoursController extends AbstractController
 {
     #[Route('/', name: 'app_parcours_index', methods: ['GET'])]
-    public function index(ParcoursRepository $parcoursRepository): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
-        return $this->render('parcours/index.html.twig', [
-            'parcours' => $parcoursRepository->findAll(),
-        ]);
-    }
+        $parcours_list = $doctrine
+            ->getRepository(Parcours::class)
+            ->findAll();
 
-    #[Route('/new', name: 'app_parcours_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ParcoursRepository $parcoursRepository): Response
-    {
-        $parcour = new Parcours();
-        $form = $this->createForm(ParcoursType::class, $parcour);
-        $form->handleRequest($request);
+        $data = [];
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $parcoursRepository->save($parcour, true);
-
-            return $this->redirectToRoute('app_parcours_index', [], Response::HTTP_SEE_OTHER);
+        foreach ($parcours_list as $parcours) {
+            $data[] = [
+                'id' => $parcours->getId(),
+                'title' => $parcours->getTitle(),
+                'description' => $parcours->getDescription(),
+            ];
         }
 
-        return $this->renderForm('parcours/new.html.twig', [
-            'parcour' => $parcour,
-            'form' => $form,
-        ]);
+
+        return $this->json($data);
+    }
+
+    #[Route('/new', name: 'app_parcours_new', methods: [ 'POST'])]
+    public function new(Request $request, ManagerRegistry $doctrine): Response
+    {
+        $entityManager = $doctrine->getManager();
+
+        $parcours = new Parcours();
+        $parcours->setTitle($request->request->get('title'));
+        $parcours->setDescription($request->request->get('description'));
+        $parcours->setUserId($request->request->get('user_id'));
+        $entityManager->persist($parcours);
+        $entityManager->flush();
+
+        return $this->json('Created new soignant successfully with id ' . $parcours->getId());
     }
 
     #[Route('/{id}', name: 'app_parcours_show', methods: ['GET'])]
