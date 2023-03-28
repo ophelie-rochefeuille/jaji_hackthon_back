@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Soignant{% endblock %}
+
+{% block body %}
+    <h1>Create new Soignant</h1>
+
+    {{ include('soignant/_form.html.twig') }}
+
+    <a href="{{ path('app_soignant_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Soignant{% endblock %}
+
+{% block body %}
+    <h1>Soignant</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ soignant.id }}</td>
+            </tr>
+            <tr>
+                <th>Firstname</th>
+                <td>{{ soignant.firstname }}</td>
+            </tr>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ soignant.lastname }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ soignant.category }}</td>
+            </tr>
+            <tr>
+                <th>Doctolib_url</th>
+                <td>{{ soignant.doctolibUrl }}</td>
+            </tr>
+            <tr>
+                <th>Num_national</th>
+                <td>{{ soignant.numNational }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_soignant_index') }}">back to list</a>
+
+    <a href="{{ path('app_soignant_edit', {'id': soignant.id}) }}">edit</a>
+
+    {{ include('soignant/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Soignant index{% endblock %}
+
+{% block body %}
+    <h1>Soignant index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Category</th>
+                <th>Doctolib_url</th>
+                <th>Num_national</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for soignant in soignants %}
+            <tr>
+                <td>{{ soignant.id }}</td>
+                <td>{{ soignant.firstname }}</td>
+                <td>{{ soignant.lastname }}</td>
+                <td>{{ soignant.category }}</td>
+                <td>{{ soignant.doctolibUrl }}</td>
+                <td>{{ soignant.numNational }}</td>
+                <td>
+                    <a href="{{ path('app_soignant_show', {'id': soignant.id}) }}">show</a>
+                    <a href="{{ path('app_soignant_edit', {'id': soignant.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_soignant_new') }}">Create new</a>
+{% endblock %}
