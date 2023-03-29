@@ -37,6 +37,7 @@ class FormationController extends AbstractController
                 'title' => $formation->getTitle(),
                 'description' => $formation->getDescription(),
                 'soignant' => $formation->getSoignant(),
+                'url' => $formation->getUrl()
             ];
         }
 
@@ -68,9 +69,17 @@ class FormationController extends AbstractController
     #[Route('/{id}', name: 'app_formation_show', methods: ['GET'])]
     public function show(Formation $formation): Response
     {
-        return $this->render('formation/show.html.twig', [
-            'formation' => $formation,
-        ]);
+        $data = [];
+
+        $data[] = [
+            'id' => $formation->getId(),
+            'title' => $formation->getTitle(),
+            'description' => $formation->getDescription(),
+            'soignant' => $formation->getSoignant(),
+            'url' => $formation->getUrl()
+        ];
+
+        return $this->json($data);
     }
 
     #[Route('/{id}/edit', name: 'app_formation_edit', methods: ['GET', 'POST'])]

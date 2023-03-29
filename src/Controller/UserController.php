@@ -7,6 +7,8 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Asset\UrlPackage;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,10 +31,18 @@ class UserController extends AbstractController
         $data = [];
 
         foreach ($users as $user) {
+            $localPackage = new UrlPackage(
+                ['http://localhost:8000/pictures/profile', 'http://127.0.0.1:8000/pictures/profile'],
+                new EmptyVersionStrategy()
+            );
+            $link = '';
+            if($user->getPhotoProfil()) $link = $localPackage->getUrl($user->getPhotoProfil());
+
             $data[] = [
                 'id' => $user->getId(),
                 'firstName' => $user->getFirstname(),
                 'lastName' => $user->getLastname(),
+                'profile_picture' => $link
             ];
         }
 
@@ -41,22 +51,29 @@ class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository): Response
+    public function new(Request $request, UserRepository $userRepository, ManagerRegistry $doctrine): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+        $entityManager = $doctrine->getManager();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->save($user, true);
+        $user->setFirstname($request->request->get('firstname'));
+        $user->setLastname($request->request->get('lastname'));
+        $user->setEmail($request->request->get('email'));
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-        }
+        /*$hashedPassword = $passwordHasher->hashPassword(
+            $user,
+            $plaintextPassword
+        );*/
+        $user->setPassword($request->request->get('password'));
+        $photofile = $request->request->get('profile_photo');
+        //$user->setPhotoProfil();
+        $user->setRoles(['ROLE_ADMIN']);
+        $user->setCookie($request->request->get('cookie'));
 
-        return $this->renderForm('user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->json('Created new user successfully with id ' . $user->getId());
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]

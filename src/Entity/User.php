@@ -43,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $cookie = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $photo_profil = null;
+    private ?string $photo_profil = 'default_profile_picture.png';
 
     public function __construct()
     {
