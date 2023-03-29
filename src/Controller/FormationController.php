@@ -3,6 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
+use App\Entity\Parcours;
+use App\Entity\Soignant;
+use App\Form\FormationType;
+use App\Repository\FormationRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,22 +45,24 @@ class FormationController extends AbstractController
     }
 
     #[Route('/new', name: 'app_formation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, FormationRepository $formationRepository): Response
+    public function new(Request $request, FormationRepository $formationRepository, ManagerRegistry $doctrine): Response
     {
         $formation = new Formation();
-        $form = $this->createForm(FormationType::class, $formation);
-        $form->handleRequest($request);
+        $entityManager = $doctrine->getManager();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $formationRepository->save($formation, true);
+        $formation->setTitle($request->request->get('title'));
+        $formation->setDescription($request->request->get('description'));
+        $formation->setUrl($request->request->get('url'));
+        $parcours_id = $request->request->get('parcours');
+        $formation->setParcours($doctrine->getRepository(Parcours::class)->findOneBy(['id'=>$parcours_id]));
+        $soignant_id = $request->request->get('soignant');
+        $formation->addSoignant($doctrine->getRepository(Soignant::class)->findOneBy(['id'=>$soignant_id]));
 
-            return $this->redirectToRoute('app_formation_index', [], Response::HTTP_SEE_OTHER);
-        }
+        $entityManager->persist($formation);
+        $entityManager->flush();
 
-        return $this->renderForm('formation/new.html.twig', [
-            'formation' => $formation,
-            'form' => $form,
-        ]);
+        return $this->json('Created new formation successfully with id ' . $formation->getId());
+
     }
 
     #[Route('/{id}', name: 'app_formation_show', methods: ['GET'])]
