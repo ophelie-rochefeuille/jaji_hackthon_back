@@ -51,9 +51,11 @@ class ParcoursController extends AbstractController
         $parcours->setTitle($request->request->get('title'));
         $parcours->setDescription($request->request->get('description'));
         $user_id = $request->request->get('user_id');
-        $parcours->setUserId($doctrine->getRepository(User::class)->findOneBy(['id'=>$user_id]));
+        $user = $doctrine->getRepository(User::class)->findOneBy(['id'=>$user_id]);
+        if($user) $parcours->setUserId();
         $formation_id = $request->request->get('formation');
-        $parcours->addFormation($doctrine->getRepository(Formation::class)->findOneBy(['id'=>$formation_id]));
+        $formation = $doctrine->getRepository(Formation::class)->findOneBy(['id'=>$formation_id]);
+        if($formation) $parcours->addFormation($formation);
         $imagefile = $request->request->get('image');
         //$parcours->setImage();
         $entityManager->persist($parcours);
