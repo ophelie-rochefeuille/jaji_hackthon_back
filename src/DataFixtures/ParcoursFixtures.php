@@ -16,12 +16,14 @@ class ParcoursFixtures extends Fixture
     {
         $faker = Factory::create('fr_FR');
         $users = $manager->getRepository(User::class)->findAll();
+        $images = ['soins1', 'soins2', 'soins3', 'soins4', 'soins5'];
 
         for ($i=0; $i<3; $i++) {
             $object = (new Parcours())
                 ->setTitle($faker->word)
                 ->setDescription($faker->sentence)
                 ->setUserId($faker->randomElement($users))
+                ->setImage($faker->randomElement($images))
             ;
             $manager->persist($object);
         }
