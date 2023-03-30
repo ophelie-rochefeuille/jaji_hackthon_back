@@ -3,22 +3,41 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
-use App\Form\FormationType;
-use App\Repository\FormationRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * @Route("/api", name="api_")
+ */
+
+
 #[Route('/formation')]
 class FormationController extends AbstractController
 {
     #[Route('/', name: 'app_formation_index', methods: ['GET'])]
-    public function index(FormationRepository $formationRepository): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
-        return $this->render('formation/index.html.twig', [
-            'formations' => $formationRepository->findAll(),
-        ]);
+        $formations = $doctrine
+            ->getRepository(Formation::class)
+            ->findAll();
+
+        $data = [];
+
+        foreach ($formations as $formation) {
+            $data[] = [
+                'id' => $formation->getId(),
+                'title' => $formation->getTitle(),
+                'description' => $formation->getDescription(),
+                'soignant' => $formation->getSoignant(),
+            ];
+        }
+
+
+        return $this->json($data);
     }
 
     #[Route('/new', name: 'app_formation_new', methods: ['GET', 'POST'])]

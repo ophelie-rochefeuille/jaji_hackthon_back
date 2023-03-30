@@ -5,20 +5,39 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * @Route("/api", name="api_")
+ */
+
 #[Route('/user')]
 class UserController extends AbstractController
 {
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
-        return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
+        $users = $doctrine
+            ->getRepository(User::class)
+            ->findAll();
+
+        $data = [];
+
+        foreach ($users as $user) {
+            $data[] = [
+                'id' => $user->getId(),
+                'firstName' => $user->getFirstname(),
+                'lastName' => $user->getLastname(),
+            ];
+        }
+
+
+        return $this->json($data);
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
