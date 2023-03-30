@@ -16,13 +16,16 @@ class FormationFixtures extends Fixture implements DependentFixtureInterface
         $faker = Factory::create('fr_FR');
 
         $parcours = $manager->getRepository(Parcours::class)->findAll();
+        $images = ['formation1.jpg', 'formation2.jpg','formation3.jpg','formation4.jpg','default_formation_image.jpg'];
 
         for ($i=0; $i<5; $i++) {
             $object = (new Formation())
                 ->setTitle($faker->word)
                 ->setDescription($faker->sentence)
                 ->setParcours($faker->randomElement($parcours))
-                ->setUrl($faker->url);
+                ->setUrl($faker->url)
+                ->setImage($faker->randomElement($images))
+            ;
             $manager->persist($object);
         }
 

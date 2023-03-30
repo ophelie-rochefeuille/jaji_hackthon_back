@@ -4,6 +4,8 @@ namespace App\Controller;
 use App\Entity\Soignant;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Asset\UrlPackage;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,13 +27,20 @@ class SoignantController extends AbstractController
         $data = [];
 
         foreach ($soignants as $soignant) {
+            $localPackage = new UrlPackage(
+                ['http://localhost:8000/pictures/soignant', 'http://127.0.0.1:8000/pictures/soignant'],
+                new EmptyVersionStrategy()
+            );
+            $link = '';
+            if($soignant->getImage()) $link = $localPackage->getUrl($soignant->getImage());
             $data[] = [
                 'id' => $soignant->getId(),
                 'firstName' => $soignant->getFirstname(),
                 'lastName' => $soignant->getLastname(),
                 'catégorie' => $soignant->getCategory(),
                 'doctolib' => $soignant->getDoctolibUrl(),
-                'numero' => $soignant->getNumNational()
+                'numero' => $soignant->getNumNational(),
+                'image' => $link
             ];
         }
 
