@@ -22,6 +22,7 @@ class ParcoursFixtures extends Fixture
                 ->setTitle($faker->word)
                 ->setDescription($faker->sentence)
                 ->setUserId($faker->randomElement($users))
+                ->setChronologie()
             ;
             $manager->persist($object);
         }

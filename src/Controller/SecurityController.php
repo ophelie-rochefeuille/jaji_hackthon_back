@@ -8,13 +8,28 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * @Route("/api", name="api_")
+ */
 class SecurityController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login', methods: ['POST'])]
-    public function login(/*AuthenticationUtils $authenticationUtils,*/ #[CurrentUser] $user = null): Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->json([
+                'error' => 'Invalid login request: check that the Content-Type header is "application/json".'.$error
+            ], 400);
+        }
+
         return $this->json([
-            'user' => $user ? $user->getId() : null,
+            'user' => $this->getUser() ? $this->getUser()->getId() : null,
         ]);
         // get the login error if there is one
         /*$error = $authenticationUtils->getLastAuthenticationError();
