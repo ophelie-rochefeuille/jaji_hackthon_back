@@ -14,14 +14,16 @@ class SoignantFixtures extends Fixture
         $faker = Factory::create('fr_FR');
 
         $categories = ['Médecin', 'Pharmacien', 'Kiné', 'Infirmier', 'Osthéo', 'Psychothérapeute'];
-        $images = ['soignant1','soignant2', 'soignant3', 'soignant4', 'soignant5'];
+
+        $images = ['soignant1.jpg','soignant2.jpg','soignant3.jpg','soignant4.jpg','soignant5.jpg'];
 
         for($i=0;$i<7; $i++)
         {
+            $c = $i%6;
             $object = (new Soignant())
                 ->setFirstname($faker->firstName)
                 ->setLastname($faker->lastName)
-                ->setCategory($categories[$i])
+                ->setCategory($categories[$c])
                 ->setDoctolibUrl($faker->url)
                 ->setNumNational($faker->numberBetween(1000000000, 9999999999))
                 ->setImage($faker->randomElement($images))

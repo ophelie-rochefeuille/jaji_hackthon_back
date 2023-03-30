@@ -34,12 +34,19 @@ class FormationController extends AbstractController
         $data = [];
 
         foreach ($formations as $formation) {
+            $localPackage = new UrlPackage(
+                ['http://localhost:8000/pictures/formation', 'http://127.0.0.1:8000/pictures/formation'],
+                new EmptyVersionStrategy()
+            );
+            $link = '';
+            if($formation->getImage()) $link = $localPackage->getUrl($formation->getImage());
             $data[] = [
                 'id' => $formation->getId(),
                 'title' => $formation->getTitle(),
                 'description' => $formation->getDescription(),
                 'soignant' => $formation->getSoignant(),
-                'url' => $formation->getUrl()
+                'url' => $formation->getUrl(),
+                'image' => $link
             ];
         }
 
