@@ -45,7 +45,8 @@ class ParcoursController extends AbstractController
                 'id' => $parcours->getId(),
                 'title' => $parcours->getTitle(),
                 'description' => $parcours->getDescription(),
-                'image' => $link
+                'image' => $link,
+                'chronologie' => $parcours->getChronologie()
             ];
         }
 
