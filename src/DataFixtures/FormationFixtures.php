@@ -22,7 +22,8 @@ class FormationFixtures extends Fixture implements DependentFixtureInterface
                 ->setTitle($faker->word)
                 ->setDescription($faker->sentence)
                 ->setParcours($faker->randomElement($parcours))
-                ->setUrl($faker->url);
+                ->setUrl($faker->url)
+            ;
             $manager->persist($object);
         }
 

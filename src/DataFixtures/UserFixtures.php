@@ -28,6 +28,17 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setRoles(["ROLE_ADMIN"])
         ;
         $manager->persist($object);
+
+        $object = (new User())
+            ->setEmail('user@user.fr')
+            ->setFirstname($faker->firstName)
+            ->setLastname($faker->lastName)
+            ->setPassword($pwd)
+            ->setCookie($faker->boolean())
+            ->addParcour($faker->randomElement($parcours))
+            ->setRoles(["ROLE_USER"])
+        ;
+        $manager->persist($object);
         $manager->flush();
     }
 
