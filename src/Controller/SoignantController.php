@@ -57,11 +57,25 @@ class SoignantController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_soignant_show', methods: ['GET'])]
-    public function show(Soignant $soignant): Response
+    public function show(ManagerRegistry $doctrine, int $id): Response
     {
-        return $this->render('soignant/show.html.twig', [
-            'soignant' => $soignant,
-        ]);
+        $soignant = $doctrine->getRepository(Soignant::class)->find($id);
+
+        if (!$soignant) {
+
+            return $this->json('No project found for id' . $id, 404);
+        }
+
+        $data =  [
+            'id' => $soignant->getId(),
+            'firstName' => $soignant->getFirstname(),
+            'lastName' => $soignant->getLastname(),
+            'catégorie' => $soignant->getCategory(),
+            'doctolib' => $soignant->getDoctolibUrl(),
+            'numero' => $soignant->getNumNational()
+        ];
+
+        return $this->json($data);
     }
 
     #[Route('/{id}/edit', name: 'app_soignant_edit', methods: ['GET', 'POST'])]

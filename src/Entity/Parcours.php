@@ -27,6 +27,12 @@ class Parcours
     #[ORM\OneToMany(mappedBy: 'parcours', targetEntity: Formation::class)]
     private Collection $formation;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    #[ORM\Column(nullable: true)]
+    private array $chronologie = [];
+
     public function __construct()
     {
         $this->formation = new ArrayCollection();
@@ -99,6 +105,30 @@ class Parcours
                 $formation->setParcours(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getChronologie(): array
+    {
+        return $this->chronologie;
+    }
+
+    public function setChronologie(?array $chronologie): self
+    {
+        $this->chronologie = $chronologie;
 
         return $this;
     }

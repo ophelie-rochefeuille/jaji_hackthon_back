@@ -30,6 +30,21 @@ class Formation
     #[ORM\ManyToOne(inversedBy: 'formation')]
     private ?Parcours $parcours = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = 'default_formation_image.jpg';
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $title_quizz_1 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $bool_quizz_1 = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $title_quizz_2 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $bool_quizz_2 = null;
+
     public function __construct()
     {
         $this->soignant = new ArrayCollection();
@@ -114,6 +129,66 @@ class Formation
     public function setParcours(?Parcours $parcours): self
     {
         $this->parcours = $parcours;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getTitleQuizz1(): ?string
+    {
+        return $this->title_quizz_1;
+    }
+
+    public function setTitleQuizz1(?string $title_quizz_1): self
+    {
+        $this->title_quizz_1 = $title_quizz_1;
+
+        return $this;
+    }
+
+    public function isBoolQuizz1(): ?bool
+    {
+        return $this->bool_quizz_1;
+    }
+
+    public function setBoolQuizz1(?bool $bool_quizz_1): self
+    {
+        $this->bool_quizz_1 = $bool_quizz_1;
+
+        return $this;
+    }
+
+    public function getTitleQuizz2(): ?string
+    {
+        return $this->title_quizz_2;
+    }
+
+    public function setTitleQuizz2(?string $title_quizz_2): self
+    {
+        $this->title_quizz_2 = $title_quizz_2;
+
+        return $this;
+    }
+
+    public function isBoolQuizz2(): ?bool
+    {
+        return $this->bool_quizz_2;
+    }
+
+    public function setBoolQuizz2(?bool $bool_quizz_2): self
+    {
+        $this->bool_quizz_2 = $bool_quizz_2;
 
         return $this;
     }
