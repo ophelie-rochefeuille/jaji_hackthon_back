@@ -42,6 +42,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $cookie = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo_profil = 'default_profile_picture.png';
+
     public function __construct()
     {
         $this->parcours = new ArrayCollection();
@@ -179,6 +182,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCookie(bool $cookie): self
     {
         $this->cookie = $cookie;
+
+        return $this;
+    }
+
+    public function getPhotoProfil(): ?string
+    {
+        return $this->photo_profil;
+    }
+
+    public function setPhotoProfil(?string $photo_profil): self
+    {
+        $this->photo_profil = $photo_profil;
 
         return $this;
     }

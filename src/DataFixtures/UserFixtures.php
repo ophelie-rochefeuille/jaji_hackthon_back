@@ -23,7 +23,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setPassword($pwd)
-            ->setCookie($faker->boolean())
+            ->setCookie(true)
+            ->setPhotoProfil('default_profile_picture.png')
             ->addParcour($faker->randomElement($parcours))
             ->setRoles(["ROLE_ADMIN"])
         ;

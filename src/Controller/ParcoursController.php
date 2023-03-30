@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\Formation;
 use App\Entity\Parcours;
 use App\Entity\Soignant;
+use App\Entity\User;
+use App\Form\ParcoursType;
+use App\Repository\ParcoursRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +50,12 @@ class ParcoursController extends AbstractController
         $parcours = new Parcours();
         $parcours->setTitle($request->request->get('title'));
         $parcours->setDescription($request->request->get('description'));
-        $parcours->setUserId($request->request->get('user_id'));
+        $user_id = $request->request->get('user_id');
+        $parcours->setUserId($doctrine->getRepository(User::class)->findOneBy(['id'=>$user_id]));
+        $formation_id = $request->request->get('formation');
+        $parcours->addFormation($doctrine->getRepository(Formation::class)->findOneBy(['id'=>$formation_id]));
+        $imagefile = $request->request->get('image');
+        //$parcours->setImage();
         $entityManager->persist($parcours);
         $entityManager->flush();
 
