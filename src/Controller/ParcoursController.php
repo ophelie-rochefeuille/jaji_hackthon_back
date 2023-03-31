@@ -9,6 +9,8 @@ use App\Form\ParcoursType;
 use App\Repository\ParcoursRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Asset\UrlPackage;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,10 +33,20 @@ class ParcoursController extends AbstractController
         $data = [];
 
         foreach ($parcours_list as $parcours) {
+
+            $localPackage = new UrlPackage(
+                ['http://localhost:8000/pictures/soignant', 'http://127.0.0.1:8000/pictures/soignant'],
+                new EmptyVersionStrategy()
+            );
+            $link = '';
+            if($parcours->getImage()) $link = $localPackage->getUrl($parcours->getImage());
+
             $data[] = [
                 'id' => $parcours->getId(),
                 'title' => $parcours->getTitle(),
                 'description' => $parcours->getDescription(),
+                'image' => $link,
+                'chronologie' => $parcours->getChronologie()
             ];
         }
 
@@ -58,6 +70,13 @@ class ParcoursController extends AbstractController
         if($formation) $parcours->addFormation($formation);
         $imagefile = $request->request->get('image');
         //$parcours->setImage();
+        if($request->request->get('question1')) $parcours->setTitleQuizz1($request->request->get('question1'));
+        if($request->request->get('rep1')) $parcours->setTitleQuizz1($request->request->get('rep1'));
+        if($request->request->get('question2')) $parcours->setTitleQuizz1($request->request->get('question2'));
+        if($request->request->get('rep2')) $parcours->setTitleQuizz1($request->request->get('rep2'));
+
+        if($request->request->get('video_url')) $parcours->setVideoUrl($request->request->get('video_url'));
+
         $entityManager->persist($parcours);
         $entityManager->flush();
 

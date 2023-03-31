@@ -33,6 +33,24 @@ class Parcours
     #[ORM\Column(nullable: true)]
     private array $chronologie = [];
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $tags = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $title_quizz1 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $bool_quizz1 = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $title_quizz2 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $bool_quizz2 = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $video_url = null;
+
     public function __construct()
     {
         $this->formation = new ArrayCollection();
@@ -129,6 +147,78 @@ class Parcours
     public function setChronologie(?array $chronologie): self
     {
         $this->chronologie = $chronologie;
+
+        return $this;
+    }
+
+    public function getTags(): ?string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function getTitleQuizz1(): ?string
+    {
+        return $this->title_quizz1;
+    }
+
+    public function setTitleQuizz1(?string $title_quizz1): self
+    {
+        $this->title_quizz1 = $title_quizz1;
+
+        return $this;
+    }
+
+    public function isBoolQuizz1(): ?bool
+    {
+        return $this->bool_quizz1;
+    }
+
+    public function setBoolQuizz1(?bool $bool_quizz1): self
+    {
+        $this->bool_quizz1 = $bool_quizz1;
+
+        return $this;
+    }
+
+    public function getTitleQuizz2(): ?string
+    {
+        return $this->title_quizz2;
+    }
+
+    public function setTitleQuizz2(?string $title_quizz2): self
+    {
+        $this->title_quizz2 = $title_quizz2;
+
+        return $this;
+    }
+
+    public function isBoolQuizz2(): ?bool
+    {
+        return $this->bool_quizz2;
+    }
+
+    public function setBoolQuizz2(?bool $bool_quizz2): self
+    {
+        $this->bool_quizz2 = $bool_quizz2;
+
+        return $this;
+    }
+
+    public function getVideoUrl(): ?string
+    {
+        return $this->video_url;
+    }
+
+    public function setVideoUrl(?string $video_url): self
+    {
+        $this->video_url = $video_url;
 
         return $this;
     }
