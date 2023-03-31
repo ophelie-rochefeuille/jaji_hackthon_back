@@ -68,6 +68,13 @@ class ParcoursController extends AbstractController
         $parcours->addFormation($doctrine->getRepository(Formation::class)->findOneBy(['id'=>$formation_id]));
         $imagefile = $request->request->get('image');
         //$parcours->setImage();
+        if($request->request->get('question1')) $parcours->setTitleQuizz1($request->request->get('question1'));
+        if($request->request->get('rep1')) $parcours->setTitleQuizz1($request->request->get('rep1'));
+        if($request->request->get('question2')) $parcours->setTitleQuizz1($request->request->get('question2'));
+        if($request->request->get('rep2')) $parcours->setTitleQuizz1($request->request->get('rep2'));
+
+        if($request->request->get('video_url')) $parcours->setVideoUrl($request->request->get('video_url'));
+
         $entityManager->persist($parcours);
         $entityManager->flush();
 
